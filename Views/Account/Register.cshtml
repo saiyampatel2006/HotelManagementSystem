@@ -1,0 +1,74 @@
+@model RegisterViewModel
+@{
+    ViewData["Title"] = "Join Aurelia Membership";
+}
+
+<div class="py-5 bg-cream border-bottom border-gold-subtle text-center">
+    <div class="container py-3">
+        <span class="text-gold text-uppercase fw-bold letter-spacing-2 small">Elite Privileges</span>
+        <h1 class="display-5 font-serif fw-bold mt-1">Join Aurelia Membership</h1>
+        <div class="gold-divider"><i class="bi bi-gem"></i></div>
+        <p class="text-secondary max-w-700 mx-auto">
+            Become an esteemed Aurelia Patron to enjoy preferential suite upgrades, private sommelier consultations, and effortless reservation tracking.
+        </p>
+    </div>
+</div>
+
+<div class="container py-5 max-w-700">
+    <div class="p-4 p-md-5 bg-white rounded border border-gold-subtle shadow-sm">
+        <form asp-controller="Account" asp-action="Register" asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+            <div class="mb-3">
+                <label asp-for="FullName" class="form-label"></label>
+                <input asp-for="FullName" class="form-control" placeholder="Lord / Lady / Dr. Alexander Wright" required />
+                <span asp-validation-for="FullName" class="text-danger small"></span>
+            </div>
+
+            <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                    <label asp-for="Email" class="form-label"></label>
+                    <input asp-for="Email" class="form-control" placeholder="patron@domain.com" required />
+                    <span asp-validation-for="Email" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="PhoneNumber" class="form-label"></label>
+                    <input asp-for="PhoneNumber" class="form-control" placeholder="+1 (555) 000-0000" required />
+                    <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Address" class="form-label"></label>
+                <input asp-for="Address" class="form-control" placeholder="City, State, Country" />
+                <span asp-validation-for="Address" class="text-danger small"></span>
+            </div>
+
+            <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                    <label asp-for="Password" class="form-label"></label>
+                    <input asp-for="Password" class="form-control" type="password" placeholder="Min. 6 chars, 1 uppercase" required />
+                    <span asp-validation-for="Password" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="ConfirmPassword" class="form-label"></label>
+                    <input asp-for="ConfirmPassword" class="form-control" type="password" placeholder="Confirm password" required />
+                    <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-gold w-100 py-2 fs-6 mb-3">
+                <i class="bi bi-person-plus-fill me-1"></i> Complete Registration
+            </button>
+
+            <div class="text-center pt-3 border-top border-gold-subtle small text-secondary">
+                Already hold an Aurelia account?
+                <a asp-controller="Account" asp-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]" class="text-gold fw-bold ms-1">
+                    Sign In
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+

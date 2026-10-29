@@ -1,0 +1,199 @@
+@model IEnumerable<Room>
+@{
+    ViewData["Title"] = "Room Inventory & CRUD";
+}
+
+<div class="py-4 bg-cream border-bottom border-gold-subtle">
+    <div class="container d-flex flex-wrap justify-content-between align-items-center">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-1 small">
+                    <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Index">Admin</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Room Inventory</li>
+                </ol>
+            </nav>
+            <h1 class="display-6 font-serif fw-bold mb-0">Room Inventory & Management</h1>
+        </div>
+        <div class="mt-3 mt-md-0">
+            <a asp-controller="Admin" asp-action="CreateRoom" class="btn btn-gold">
+                <i class="bi bi-plus-lg me-1"></i> Add New Suite
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="container py-5">
+    <!-- Filter Bar -->
+    <div class="p-3 bg-white rounded border border-gold-subtle shadow-sm mb-4">
+        <form asp-controller="Admin" asp-action="Rooms" method="get">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label">Search Room Number / Type</label>
+                    <input type="text" name="search" class="form-control" placeholder="e.g. 101, Villa, Penthouse..." value="@ViewBag.SearchTerm" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Category</label>
+                    <select name="roomTypeId" class="form-select">
+                        <option value="">All Categories</option>
+                        @foreach (var type in (IEnumerable<RoomType>)ViewBag.RoomTypes)
+                        {
+                            <option value="@type.Id" selected="@(ViewBag.SelectedType == type.Id)">@type.Name</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Status</label>
+                    <select name="status" class="form-select">
+                        <option value="">All Statuses</option>
+                        <option value="Available" selected="@(ViewBag.SelectedStatus?.ToString() == "Available")">Available</option>
+                        <option value="Booked" selected="@(ViewBag.SelectedStatus?.ToString() == "Booked")">Booked</option>
+                        <option value="Maintenance" selected="@(ViewBag.SelectedStatus?.ToString() == "Maintenance")">Maintenance</option>
+                        <option value="Cleaning" selected="@(ViewBag.SelectedStatus?.ToString() == "Cleaning")">Cleaning</option>
+                    </select>
+                </div>
+                <div class="col-md-2 d-flex gap-2">
+                    <button type="submit" class="btn btn-gold w-100">
+                        <i class="bi bi-funnel"></i> Filter
+                    </button>
+                    <a asp-controller="Admin" asp-action="Rooms" class="btn btn-ivory" title="Reset">
+                        <i class="bi bi-arrow-clockwise"></i>
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Rooms Table -->
+    <div class="p-4 bg-white rounded border border-gold-subtle shadow-sm">
+        <div class="table-responsive">
+            <table class="table hotel-table mb-0">
+                <thead>
+                    <tr>
+                        <th>Suite</th>
+                        <th>Category</th>
+                        <th>Floor</th>
+                        <th>Capacity</th>
+                        <th>Tariff / Night</th>
+                        <th>Operational Status</th>
+                        <th>Quick Status Toggle</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var r in Model)
+                    {
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <img src="@r.ImageUrl" alt="@r.RoomNumber" class="rounded object-fit-cover" style="width: 50px; height: 40px;" />
+                                    <div>
+                                        <strong class="font-serif fs-6 text-dark">Suite @r.RoomNumber</strong>
+                                        @if (r.IsFeatured)
+                                        {
+                                            <span class="badge bg-warning text-dark ms-1" style="font-size: 0.65rem;">Featured</span>
+                                        }
+                                    </div>
+                                </div>
+                            </td>
+                            <td>@r.RoomType?.Name</td>
+                            <td>Floor @r.FloorNumber</td>
+                            <td>@r.Capacity Guests</td>
+                            <td><strong class="text-gold-dark">$@r.PricePerNight.ToString("N2")</strong></td>
+                            <td>
+                                @if (r.Status == RoomStatus.Available)
+                                {
+                                    <span class="badge badge-status-available">Available</span>
+                                }
+                                else if (r.Status == RoomStatus.Booked)
+                                {
+                                    <span class="badge badge-status-booked">Booked</span>
+                                }
+                                else if (r.Status == RoomStatus.Maintenance)
+                                {
+                                    <span class="badge badge-status-maintenance">Maintenance</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-status-cleaning">Housekeeping</span>
+                                }
+                            </td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="btn btn-ivory btn-sm dropdown-toggle py-1 px-2" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-size: 0.78rem;">
+                                        Change Status
+                                    </button>
+                                    <ul class="dropdown-menu shadow-sm border-gold-subtle">
+                                        <li>
+                                            <form asp-controller="Admin" asp-action="SetRoomStatus" method="post">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="id" value="@r.Id" />
+                                                <input type="hidden" name="status" value="Available" />
+                                                <button type="submit" class="dropdown-item small text-success">
+                                                    <i class="bi bi-check-circle me-1"></i> Available
+                                                </button>
+                                            </form>
+                                        </li>
+                                        <li>
+                                            <form asp-controller="Admin" asp-action="SetRoomStatus" method="post">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="id" value="@r.Id" />
+                                                <input type="hidden" name="status" value="Maintenance" />
+                                                <button type="submit" class="dropdown-item small text-danger">
+                                                    <i class="bi bi-tools me-1"></i> Maintenance
+                                                </button>
+                                            </form>
+                                        </li>
+                                        <li>
+                                            <form asp-controller="Admin" asp-action="SetRoomStatus" method="post">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="id" value="@r.Id" />
+                                                <input type="hidden" name="status" value="Cleaning" />
+                                                <button type="submit" class="dropdown-item small text-primary">
+                                                    <i class="bi bi-stars me-1"></i> Housekeeping / Cleaning
+                                                </button>
+                                            </form>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </td>
+                            <td class="text-end">
+                                <div class="btn-group btn-group-sm">
+                                    <a asp-controller="Admin" asp-action="EditRoom" asp-route-id="@r.Id" class="btn btn-outline-secondary" title="Edit Suite">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                    <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteRoomModal-@r.Id" title="Delete Suite">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+
+                                <!-- Delete Modal -->
+                                <div class="modal fade text-start" id="deleteRoomModal-@r.Id" tabindex="-1" aria-labelledby="delModalLabel-@r.Id" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content border-gold-subtle">
+                                            <div class="modal-header bg-cream">
+                                                <h5 class="modal-title font-serif fw-bold" id="delModalLabel-@r.Id">Delete Suite @r.RoomNumber</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <form asp-controller="Admin" asp-action="DeleteRoom" asp-route-id="@r.Id" method="post">
+                                                @Html.AntiForgeryToken()
+                                                <div class="modal-body">
+                                                    <p class="text-secondary mb-2">Are you sure you want to permanently delete Suite <strong>@r.RoomNumber</strong> from inventory?</p>
+                                                    <small class="text-muted">If this suite has existing bookings, it will automatically be set to Maintenance to protect reservation integrity.</small>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-ivory" data-bs-dismiss="modal">Cancel</button>
+                                                    <button type="submit" class="btn btn-danger">Confirm Deletion</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

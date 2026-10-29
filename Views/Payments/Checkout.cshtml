@@ -1,0 +1,149 @@
+@model PaymentViewModel
+@{
+    ViewData["Title"] = $"Settle Reservation - {Model.BookingReference}";
+}
+
+<div class="py-4 bg-cream border-bottom border-gold-subtle">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-1 small">
+                <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+                <li class="breadcrumb-item"><a asp-controller="Bookings" asp-action="MyBookings">Bookings</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Payment Gateway</li>
+            </ol>
+        </nav>
+        <h1 class="font-serif fw-bold h2 mb-0">Secure Luxury Payment Terminal</h1>
+    </div>
+</div>
+
+<div class="container py-5 max-w-700">
+    <div class="p-4 p-md-5 bg-white rounded border border-gold-subtle shadow-sm">
+        <div class="d-flex justify-content-between align-items-center pb-3 mb-4 border-bottom border-gold-subtle">
+            <div>
+                <small class="text-secondary d-block">Reservation Reference</small>
+                <span class="font-serif fs-4 fw-bold text-dark">@Model.BookingReference</span>
+            </div>
+            <div class="text-end">
+                <small class="text-secondary d-block">Total Due</small>
+                <span class="font-serif fs-3 fw-bold text-gold-dark">$@Model.TotalAmount.ToString("N2")</span>
+            </div>
+        </div>
+
+        <!-- Summary of reservation -->
+        <div class="p-3 bg-cream rounded border border-gold-subtle mb-4 small">
+            <div class="row g-2">
+                <div class="col-6"><strong>Guest:</strong> @Model.GuestName</div>
+                <div class="col-6"><strong>Suite:</strong> @Model.RoomName (#@Model.RoomNumber)</div>
+                <div class="col-6"><strong>Check-In:</strong> @Model.CheckInDate.ToString("MMM dd, yyyy")</div>
+                <div class="col-6"><strong>Check-Out:</strong> @Model.CheckOutDate.ToString("MMM dd, yyyy")</div>
+                <div class="col-12"><strong>Stay Duration:</strong> @Model.TotalNights Night(s)</div>
+            </div>
+        </div>
+
+        <form asp-controller="Payments" asp-action="Process" method="post" id="paymentForm">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="BookingId" />
+            <input type="hidden" asp-for="TotalAmount" />
+            <input type="hidden" asp-for="BookingReference" />
+
+            <h5 class="font-serif fw-bold mb-3">Select Settlement Method</h5>
+
+            <!-- Payment Method Tabs -->
+            <ul class="nav nav-pills mb-4 nav-fill gap-2" id="paymentTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active border" id="card-tab" data-bs-toggle="pill" data-bs-target="#card-pane" type="button" role="tab" onclick="document.getElementById('selectedMethod').value='Credit Card'">
+                        <i class="bi bi-credit-card-2-front me-1"></i> Credit / Debit Card
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link border" id="upi-tab" data-bs-toggle="pill" data-bs-target="#upi-pane" type="button" role="tab" onclick="document.getElementById('selectedMethod').value='UPI / Instant Transfer'">
+                        <i class="bi bi-qr-code-scan me-1"></i> UPI / Net Banking
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link border" id="cash-tab" data-bs-toggle="pill" data-bs-target="#cash-pane" type="button" role="tab" onclick="document.getElementById('selectedMethod').value='Cash on Arrival'">
+                        <i class="bi bi-cash-stack me-1"></i> Pay at Front Desk
+                    </button>
+                </li>
+            </ul>
+
+            <input type="hidden" asp-for="PaymentMethod" id="selectedMethod" value="Credit Card" />
+
+            <div class="tab-content mb-4" id="paymentTabContent">
+                <!-- Credit Card Pane -->
+                <div class="tab-pane fade show active" id="card-pane" role="tabpanel">
+                    <div class="p-3 bg-light rounded border mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="small fw-bold text-secondary">Demo Card Quick-Fill</span>
+                            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="quickFillCard()">
+                                Use Demo Card
+                            </button>
+                        </div>
+                        <small class="text-muted">Simulated evaluation gateway: Use any 16-digit card number or click the demo button.</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="CardHolderName" class="form-label"></label>
+                        <input asp-for="CardHolderName" class="form-control" id="cardHolder" placeholder="Alexander Wright" />
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="CardNumber" class="form-label"></label>
+                        <input asp-for="CardNumber" class="form-control" id="cardNumber" placeholder="4111 2222 3333 4444" maxlength="19" />
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <label asp-for="CardExpiry" class="form-label"></label>
+                            <input asp-for="CardExpiry" class="form-control" id="cardExpiry" placeholder="12/28" maxlength="5" />
+                        </div>
+                        <div class="col-6">
+                            <label asp-for="CardCvv" class="form-label"></label>
+                            <input asp-for="CardCvv" class="form-control" id="cardCvv" placeholder="888" maxlength="4" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- UPI Pane -->
+                <div class="tab-pane fade" id="upi-pane" role="tabpanel">
+                    <div class="text-center p-4 bg-light rounded border mb-3">
+                        <i class="bi bi-qr-code fs-1 text-gold mb-2 d-block"></i>
+                        <p class="small text-secondary mb-1">Scan QR or enter Virtual Payment Address (VPA)</p>
+                        <span class="badge bg-gold-light text-gold-dark">grandaurelia@upi</span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="UpiId" class="form-label"></label>
+                        <input asp-for="UpiId" class="form-control" placeholder="guest@okhdfcbank" />
+                    </div>
+                </div>
+
+                <!-- Cash on Arrival Pane -->
+                <div class="tab-pane fade" id="cash-pane" role="tabpanel">
+                    <div class="alert alert-secondary small">
+                        <i class="bi bi-building-check text-gold me-2 fs-5"></i>
+                        You can settle your full invoice of <strong>$@Model.TotalAmount.ToString("N2")</strong> at the Grand Aurelia Concierge desk upon physical check-in via cash, corporate cheque, or foreign currency exchange.
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label asp-for="Notes" class="form-label">Billing Notes (Optional)</label>
+                <input asp-for="Notes" class="form-control" placeholder="Tax invoice recipient name, corporate GSTIN, or billing reference..." />
+            </div>
+
+            <button type="submit" class="btn btn-gold w-100 py-3 fs-6">
+                <i class="bi bi-shield-check me-2"></i> Authorize & Confirm Reservation ($@Model.TotalAmount.ToString("N2"))
+            </button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function quickFillCard() {
+            document.getElementById('cardHolder').value = '@Model.GuestName';
+            document.getElementById('cardNumber').value = '4111 2222 3333 4444';
+            document.getElementById('cardExpiry').value = '12/28';
+            document.getElementById('cardCvv').value = '987';
+        }
+    </script>
+}
+

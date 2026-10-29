@@ -1,0 +1,114 @@
+@model RoomFormViewModel
+@{
+    ViewData["Title"] = $"Edit Suite {Model.RoomNumber}";
+}
+
+<div class="py-4 bg-cream border-bottom border-gold-subtle">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-1 small">
+                <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Index">Admin</a></li>
+                <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Rooms">Rooms</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Edit Suite @Model.RoomNumber</li>
+            </ol>
+        </nav>
+        <h1 class="display-6 font-serif fw-bold mb-0">Modify Suite Specifications: #@Model.RoomNumber</h1>
+    </div>
+</div>
+
+<div class="container py-5 max-w-700">
+    <div class="p-4 p-md-5 bg-white rounded border border-gold-subtle shadow-sm">
+        <form asp-controller="Admin" asp-action="EditRoom" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="Id" />
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+            <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                    <label asp-for="RoomNumber" class="form-label"></label>
+                    <input asp-for="RoomNumber" class="form-control" required />
+                    <span asp-validation-for="RoomNumber" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="RoomTypeId" class="form-label"></label>
+                    <select asp-for="RoomTypeId" class="form-select" required>
+                        @foreach (var type in Model.AvailableRoomTypes)
+                        {
+                            <option value="@type.Id" selected="@(type.Id == Model.RoomTypeId)">@type.Name</option>
+                        }
+                    </select>
+                    <span asp-validation-for="RoomTypeId" class="text-danger small"></span>
+                </div>
+            </div>
+
+            <div class="row g-3 mb-3">
+                <div class="col-md-4">
+                    <label asp-for="PricePerNight" class="form-label"></label>
+                    <input asp-for="PricePerNight" class="form-control" type="number" step="0.01" min="10" required />
+                    <span asp-validation-for="PricePerNight" class="text-danger small"></span>
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="Capacity" class="form-label"></label>
+                    <input asp-for="Capacity" class="form-control" type="number" min="1" max="12" required />
+                    <span asp-validation-for="Capacity" class="text-danger small"></span>
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="FloorNumber" class="form-label"></label>
+                    <input asp-for="FloorNumber" class="form-control" type="number" min="1" max="100" required />
+                    <span asp-validation-for="FloorNumber" class="text-danger small"></span>
+                </div>
+            </div>
+
+            <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                    <label asp-for="Status" class="form-label"></label>
+                    <select asp-for="Status" class="form-select" asp-items="Html.GetEnumSelectList<RoomStatus>()"></select>
+                </div>
+                <div class="col-md-6 d-flex align-items-center pt-4">
+                    <div class="form-check">
+                        <input asp-for="IsFeatured" class="form-check-input" />
+                        <label asp-for="IsFeatured" class="form-check-label small fw-semibold text-dark"></label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="ImageUrl" class="form-label"></label>
+                <input asp-for="ImageUrl" class="form-control" required />
+                <span asp-validation-for="ImageUrl" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-4">
+                <label asp-for="Description" class="form-label"></label>
+                <textarea asp-for="Description" class="form-control" rows="3" required></textarea>
+                <span asp-validation-for="Description" class="text-danger small"></span>
+            </div>
+
+            <!-- Facilities Multi-Select Checkboxes -->
+            <div class="mb-4">
+                <label class="form-label d-block">Suite Amenities & Facilities</label>
+                <div class="row g-2 p-3 bg-cream rounded border border-gold-subtle">
+                    @foreach (var fac in Model.AvailableFacilities)
+                    {
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="SelectedFacilityIds" value="@fac.Id" id="edit_fac_@fac.Id" @(Model.SelectedFacilityIds.Contains(fac.Id) ? "checked" : "") />
+                                <label class="form-check-label small" for="edit_fac_@fac.Id">
+                                    <i class="bi @fac.IconClass text-gold me-1"></i> @fac.Name
+                                </label>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center pt-3 border-top border-gold-subtle">
+                <a asp-controller="Admin" asp-action="Rooms" class="btn btn-ivory">Cancel</a>
+                <button type="submit" class="btn btn-gold">
+                    <i class="bi bi-save me-1"></i> Update Suite Specifications
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+

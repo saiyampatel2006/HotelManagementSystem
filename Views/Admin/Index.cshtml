@@ -1,0 +1,270 @@
+@model DashboardViewModel
+@{
+    ViewData["Title"] = "Executive Admin Dashboard";
+}
+
+<div class="py-4 bg-cream border-bottom border-gold-subtle">
+    <div class="container d-flex flex-wrap justify-content-between align-items-center">
+        <div>
+            <span class="text-gold text-uppercase fw-bold letter-spacing-2 small">Hotel Operations Control</span>
+            <h1 class="display-6 font-serif fw-bold mb-0">Management Executive Dashboard</h1>
+        </div>
+        <div class="mt-3 mt-md-0 d-flex gap-2">
+            <a asp-controller="Admin" asp-action="CreateRoom" class="btn btn-gold btn-sm">
+                <i class="bi bi-plus-lg me-1"></i> Add New Suite
+            </a>
+            <a asp-controller="Reports" asp-action="Index" class="btn btn-ivory btn-sm">
+                <i class="bi bi-bar-chart me-1"></i> Financial Reports
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="container py-5">
+    <!-- AIML Forecasting Alert Box for College Project Evaluation -->
+    <div class="aiml-badge-box mb-4">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <div class="d-flex align-items-center gap-2 mb-1">
+                    <span class="badge bg-gold-dark text-white px-2 py-1 small">AIML Predictive Analytics Engine</span>
+                    <h5 class="font-serif fw-bold mb-0 text-dark">Real-Time Hotel Occupancy & Revenue Forecast</h5>
+                </div>
+                <div class="text-secondary small mb-2">
+                    <strong>Algorithmic Forecast:</strong> @Model.AiOccupancyForecast
+                </div>
+                <div class="text-secondary small">
+                    <strong>Recommended Pricing Strategy:</strong> @Model.AiRecommendedPricingAction
+                </div>
+            </div>
+            <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+                <div class="d-inline-block bg-white p-2 px-3 rounded border border-gold-subtle shadow-sm text-center">
+                    <small class="text-muted d-block" style="font-size: 0.72rem;">Dynamic Demand Index</small>
+                    <span class="font-serif fs-4 fw-bold text-gold-dark">@(Model.DynamicDemandIndex)x</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- KPI Metric Cards Grid -->
+    <div class="row g-4 mb-5">
+        <div class="col-xl-3 col-sm-6">
+            <div class="kpi-card h-100 d-flex align-items-center gap-3">
+                <div class="kpi-icon"><i class="bi bi-cash-coin"></i></div>
+                <div>
+                    <span class="kpi-title">Gross Revenue</span>
+                    <div class="kpi-value text-gold-dark">$@Model.TotalRevenue.ToString("N0")</div>
+                    <small class="text-secondary">Confirmed & Settled</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-sm-6">
+            <div class="kpi-card h-100 d-flex align-items-center gap-3">
+                <div class="kpi-icon"><i class="bi bi-calendar-check"></i></div>
+                <div>
+                    <span class="kpi-title">Total Bookings</span>
+                    <div class="kpi-value">@Model.TotalBookings</div>
+                    <small class="text-secondary">All reservations recorded</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-sm-6">
+            <div class="kpi-card h-100 d-flex align-items-center gap-3">
+                <div class="kpi-icon"><i class="bi bi-pie-chart"></i></div>
+                <div>
+                    <span class="kpi-title">Occupancy Rate</span>
+                    <div class="kpi-value text-success">@Model.OccupancyRate%</div>
+                    <small class="text-secondary">@Model.AvailableRoomsCount of @Model.TotalRoomsCount suites open</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-sm-6">
+            <div class="kpi-card h-100 d-flex align-items-center gap-3">
+                <div class="kpi-icon"><i class="bi bi-person-badge"></i></div>
+                <div>
+                    <span class="kpi-title">Active Guests</span>
+                    <div class="kpi-value text-primary">@Model.ActiveCheckIns</div>
+                    <small class="text-secondary">Currently in-house</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart.js Analytics Visualizations -->
+    <div class="row g-4 mb-5">
+        <!-- Monthly Revenue Trend Bar Chart -->
+        <div class="col-lg-7">
+            <div class="p-4 bg-white rounded border border-gold-subtle shadow-sm h-100">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h5 class="font-serif fw-bold mb-0">6-Month Revenue Trajectory ($)</h5>
+                    <span class="badge bg-gold-light text-gold-dark border border-gold-subtle">Monthly Revenue</span>
+                </div>
+                <div style="height: 280px;">
+                    <canvas id="revenueTrendChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Suite Category Demand Doughnut Chart -->
+        <div class="col-lg-5">
+            <div class="p-4 bg-white rounded border border-gold-subtle shadow-sm h-100">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h5 class="font-serif fw-bold mb-0">Bookings by Suite Category</h5>
+                    <span class="badge bg-gold-light text-gold-dark border border-gold-subtle">Category Share</span>
+                </div>
+                <div style="height: 280px; position: relative;">
+                    <canvas id="roomTypeChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Reservations Operational Table -->
+    <div class="p-4 bg-white rounded border border-gold-subtle shadow-sm mb-5">
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+            <div>
+                <h5 class="font-serif fw-bold mb-0">Recent Reservations & Desk Operations</h5>
+                <small class="text-secondary">Latest guest bookings requiring concierge action or check-in verification</small>
+            </div>
+            <a asp-controller="Admin" asp-action="Bookings" class="btn btn-ivory btn-sm mt-2 mt-sm-0">
+                View All Reservations <i class="bi bi-arrow-right ms-1"></i>
+            </a>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table hotel-table mb-0">
+                <thead>
+                    <tr>
+                        <th>Booking Ref</th>
+                        <th>Guest</th>
+                        <th>Suite</th>
+                        <th>Check-In / Out</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var b in Model.RecentBookings)
+                    {
+                        <tr>
+                            <td>
+                                <strong class="font-serif text-gold-dark">@b.BookingReference</strong>
+                                <small class="text-muted d-block" style="font-size: 0.72rem;">@b.CreatedAt.ToString("yyyy-MM-dd HH:mm")</small>
+                            </td>
+                            <td>
+                                <div class="fw-bold text-dark">@(b.User?.FullName ?? "Grand Guest")</div>
+                                <small class="text-muted">@(b.User?.Email ?? "N/A")</small>
+                            </td>
+                            <td>
+                                <strong>Suite @b.Room?.RoomNumber</strong>
+                                <small class="text-muted d-block">@b.Room?.RoomType?.Name</small>
+                            </td>
+                            <td>
+                                <div class="small">@b.CheckInDate.ToString("MMM dd") – @b.CheckOutDate.ToString("MMM dd, yyyy")</div>
+                                <small class="text-muted">(@b.TotalNights nights)</small>
+                            </td>
+                            <td>
+                                <strong class="text-dark">$@b.TotalPrice.ToString("N2")</strong>
+                            </td>
+                            <td>
+                                @if (b.Status == BookingStatus.Confirmed)
+                                {
+                                    <span class="badge badge-booking-confirmed">Confirmed</span>
+                                }
+                                else if (b.Status == BookingStatus.CheckedIn)
+                                {
+                                    <span class="badge badge-booking-checkedin">Checked-In</span>
+                                }
+                                else if (b.Status == BookingStatus.CheckedOut)
+                                {
+                                    <span class="badge badge-booking-checkedout">Checked-Out</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-booking-cancelled">Cancelled</span>
+                                }
+                            </td>
+                            <td class="text-end">
+                                <a asp-controller="Admin" asp-action="BookingDetails" asp-route-id="@b.Id" class="btn btn-ivory btn-sm">
+                                    Manage
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // 1. Revenue Trajectory Chart
+            const ctxRev = document.getElementById('revenueTrendChart').getContext('2d');
+            new Chart(ctxRev, {
+                type: 'bar',
+                data: {
+                    labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.MonthlyLabels)),
+                    datasets: [{
+                        label: 'Gross Revenue ($)',
+                        data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.MonthlyRevenues)),
+                        backgroundColor: 'rgba(184, 147, 84, 0.75)',
+                        borderColor: '#B89354',
+                        borderWidth: 1.5,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(val) { return '$' + val.toLocaleString(); }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // 2. Room Category Distribution Doughnut
+            const ctxType = document.getElementById('roomTypeChart').getContext('2d');
+            new Chart(ctxType, {
+                type: 'doughnut',
+                data: {
+                    labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.RoomTypeLabels)),
+                    datasets: [{
+                        data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.RoomTypeBookingCounts)),
+                        backgroundColor: [
+                            '#B89354',
+                            '#C5A065',
+                            '#D8BA84',
+                            '#EADBC3'
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#FFFFFF'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { boxWidth: 12, font: { size: 11 } }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+}
+

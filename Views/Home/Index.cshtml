@@ -1,0 +1,294 @@
+@model HomeViewModel
+@{
+    ViewData["Title"] = "Luxury Stays & Bespoke Suites";
+}
+
+<!-- Hero Section -->
+<section class="hero-luxury">
+    <div class="container text-center text-lg-start">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <span class="badge bg-gold-light text-gold-dark px-3 py-2 text-uppercase letter-spacing-2 fw-bold mb-3 d-inline-block shadow-sm">
+                    <i class="bi bi-award-fill me-1"></i> Grand World Luxury Award Winner
+                </span>
+                <h1 class="display-3 mb-3">Where Opulence Meets Serenity</h1>
+                <p class="hero-subtitle">
+                    Immerse yourself in hand-crafted Italian architecture, private plunge villas, Michelin-starred gastronomy, and 24/7 royal butler service.
+                </p>
+                <div class="d-flex flex-wrap gap-3 justify-content-center justify-content-lg-start">
+                    <a href="#suiteCatalogue" class="btn btn-gold btn-lg px-4">
+                        <i class="bi bi-eye"></i> Explore Suites
+                    </a>
+                    <a asp-controller="Home" asp-action="About" class="btn btn-ivory btn-lg px-4">
+                        <i class="bi bi-play-circle"></i> Experience The Grand
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Interactive Booking Search Bar (Overlay) -->
+<div class="container">
+    <div class="hotel-hero-search">
+        <form asp-controller="Rooms" asp-action="Index" method="get">
+            <div class="row g-3 align-items-end">
+                <div class="col-lg-3 col-md-6">
+                    <label class="form-label"><i class="bi bi-calendar-event text-gold me-1"></i> Check-In Date</label>
+                    <input type="date" name="CheckIn" class="form-control" value="@Model.CheckIn.ToString("yyyy-MM-dd")" min="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <label class="form-label"><i class="bi bi-calendar-check text-gold me-1"></i> Check-Out Date</label>
+                    <input type="date" name="CheckOut" class="form-control" value="@Model.CheckOut.ToString("yyyy-MM-dd")" min="@DateTime.Today.AddDays(1).ToString("yyyy-MM-dd")" />
+                </div>
+                <div class="col-lg-2 col-md-4">
+                    <label class="form-label"><i class="bi bi-people text-gold me-1"></i> Guests</label>
+                    <select name="Guests" class="form-select">
+                        <option value="1">1 Adult</option>
+                        <option value="2" selected>2 Guests</option>
+                        <option value="3">3 Guests</option>
+                        <option value="4">4 Guests</option>
+                        <option value="5">5+ Villa Party</option>
+                    </select>
+                </div>
+                <div class="col-lg-2 col-md-4">
+                    <label class="form-label"><i class="bi bi-tag text-gold me-1"></i> Suite Category</label>
+                    <select name="RoomTypeId" class="form-select">
+                        <option value="">All Categories</option>
+                        @foreach (var type in Model.RoomTypes)
+                        {
+                            <option value="@type.Id">@type.Name</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-lg-2 col-md-4">
+                    <button type="submit" class="btn btn-gold w-100 py-2">
+                        <i class="bi bi-search"></i> Check Availability
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Hotel Key Distinction Counters -->
+<section class="py-5 mt-4">
+    <div class="container">
+        <div class="row g-4 text-center">
+            <div class="col-md-3 col-6">
+                <div class="p-4 bg-white rounded border border-gold-subtle shadow-sm h-100">
+                    <i class="bi bi-door-closed fs-1 text-gold mb-2 d-block"></i>
+                    <h3 class="fw-bold mb-1 font-serif text-dark">@Model.TotalLuxuryRooms Suites</h3>
+                    <p class="text-secondary small mb-0">Individually designed residences</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="p-4 bg-white rounded border border-gold-subtle shadow-sm h-100">
+                    <i class="bi bi-star-fill fs-1 text-gold mb-2 d-block"></i>
+                    <h3 class="fw-bold mb-1 font-serif text-dark">4.96 / 5.0</h3>
+                    <p class="text-secondary small mb-0">Verified guest reviews</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="p-4 bg-white rounded border border-gold-subtle shadow-sm h-100">
+                    <i class="bi bi-cup-straw fs-1 text-gold mb-2 d-block"></i>
+                    <h3 class="fw-bold mb-1 font-serif text-dark">3 Michelin</h3>
+                    <p class="text-secondary small mb-0">Culinary destinations & cellar</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="p-4 bg-white rounded border border-gold-subtle shadow-sm h-100">
+                    <i class="bi bi-shield-check fs-1 text-gold mb-2 d-block"></i>
+                    <h3 class="fw-bold mb-1 font-serif text-dark">24 / 7</h3>
+                    <p class="text-secondary small mb-0">Private butler & security team</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Rooms Section -->
+<section id="suiteCatalogue" class="py-5 bg-cream">
+    <div class="container">
+        <div class="text-center max-w-700 mx-auto mb-5">
+            <span class="text-gold text-uppercase fw-bold letter-spacing-2 small">Signature Residences</span>
+            <h2 class="display-5 fw-bold font-serif mt-1">Featured Suites & Villas</h2>
+            <div class="gold-divider">
+                <i class="bi bi-gem"></i>
+            </div>
+            <p class="text-secondary">
+                From corner executive skyline quarters to beachfront estate villas with private infinity plunge pools.
+            </p>
+        </div>
+
+        <div class="row g-4">
+            @foreach (var room in Model.FeaturedRooms)
+            {
+                <div class="col-lg-6 col-md-6">
+                    <div class="hotel-card h-100 d-flex flex-column">
+                        <div class="hotel-card-img-wrapper">
+                            <img src="@room.ImageUrl" alt="@room.RoomType?.Name" loading="lazy" />
+                            <span class="hotel-badge-ribbon">@room.RoomType?.Name</span>
+                            <div class="hotel-badge-price">
+                                <span class="text-gold-dark font-serif fs-5 fw-bold">$@room.PricePerNight.ToString("N0")</span>
+                                <small class="text-muted fw-normal">/ night</small>
+                            </div>
+                        </div>
+                        <div class="p-4 d-flex flex-column flex-grow-1">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h4 class="font-serif fw-bold mb-0">Suite @room.RoomNumber</h4>
+                                <span class="badge badge-status-available">Available</span>
+                            </div>
+                            <p class="text-secondary small mb-3">
+                                @room.Description
+                            </p>
+
+                            <!-- Facility Highlights -->
+                            <div class="mb-4">
+                                @foreach (var rf in room.RoomFacilities.Take(4))
+                                {
+                                    <span class="facility-pill">
+                                        <i class="bi @rf.Facility.IconClass"></i> @rf.Facility.Name
+                                    </span>
+                                }
+                            </div>
+
+                            <div class="mt-auto pt-3 border-top border-gold-subtle d-flex justify-content-between align-items-center">
+                                <span class="small text-secondary">
+                                    <i class="bi bi-people text-gold me-1"></i> Up to @room.Capacity Guests
+                                </span>
+                                <div class="d-flex gap-2">
+                                    <a asp-controller="Rooms" asp-action="Details" asp-route-id="@room.Id" class="btn btn-ivory btn-sm">
+                                        Details
+                                    </a>
+                                    <a asp-controller="Bookings" asp-action="Create" asp-route-roomId="@room.Id" class="btn btn-gold btn-sm">
+                                        Book Now
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="text-center mt-5">
+            <a asp-controller="Rooms" asp-action="Index" class="btn btn-gold-outline btn-lg px-4">
+                View All Available Suites & Villas <i class="bi bi-arrow-right ms-2"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- AIML Feature Showcase Section for College Evaluators -->
+<section class="py-5 bg-white">
+    <div class="container">
+        <div class="aiml-badge-box">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <span class="badge bg-gold-dark text-white px-2 py-1 small">AI & ML Module</span>
+                        <h4 class="font-serif fw-bold mb-0 text-dark">Intelligent Dynamic Pricing & Guest Matching Engine</h4>
+                    </div>
+                    <p class="text-secondary small mb-0">
+                        This college system incorporates a predictive algorithmic pricing and suite recommendation service. It adapts real-time inventory according to party composition, length of stay heuristics, and seasonal occupancy velocity.
+                    </p>
+                </div>
+                <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+                    <a asp-controller="Rooms" asp-action="Index" asp-route-Guests="4" class="btn btn-gold btn-sm">
+                        <i class="bi bi-cpu me-1"></i> Test AI Match Engine
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Resort Facilities / Amenities Grid -->
+<section class="py-5 bg-ivory">
+    <div class="container">
+        <div class="text-center max-w-700 mx-auto mb-5">
+            <span class="text-gold text-uppercase fw-bold letter-spacing-2 small">Unrivalled Amenities</span>
+            <h2 class="display-5 fw-bold font-serif mt-1">Curated For Ultimate Comfort</h2>
+            <div class="gold-divider"><i class="bi bi-gem"></i></div>
+        </div>
+
+        <div class="row g-4">
+            @foreach (var fac in Model.FeaturedFacilities)
+            {
+                <div class="col-lg-4 col-md-6">
+                    <div class="p-4 bg-white rounded border border-gold-subtle shadow-sm h-100 d-flex gap-3 align-items-start">
+                        <div class="kpi-icon flex-shrink-0">
+                            <i class="bi @fac.IconClass"></i>
+                        </div>
+                        <div>
+                            <h5 class="font-serif fw-bold mb-1">@fac.Name</h5>
+                            <p class="text-secondary small mb-0">@fac.Description</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- Guest Testimonials Carousel / Grid -->
+<section class="py-5 bg-cream">
+    <div class="container">
+        <div class="text-center max-w-700 mx-auto mb-5">
+            <span class="text-gold text-uppercase fw-bold letter-spacing-2 small">Guest Stories</span>
+            <h2 class="display-5 fw-bold font-serif mt-1">Reflections of Grandeur</h2>
+            <div class="gold-divider"><i class="bi bi-gem"></i></div>
+        </div>
+
+        <div class="row g-4">
+            @if (Model.RecentReviews.Any())
+            {
+                foreach (var review in Model.RecentReviews)
+                {
+                    <div class="col-lg-4 col-md-6">
+                        <div class="p-4 bg-white rounded border border-gold-subtle shadow-sm h-100 d-flex flex-column">
+                            <div class="text-warning mb-2">
+                                @for (int i = 0; i < review.Rating; i++)
+                                {
+                                    <i class="bi bi-star-fill text-gold"></i>
+                                }
+                            </div>
+                            <p class="font-serif text-dark fst-italic mb-3 flex-grow-1">
+                                "@review.Comment"
+                            </p>
+                            <div class="pt-3 border-top border-gold-subtle d-flex align-items-center gap-2">
+                                <div class="bg-gold-light text-gold-dark rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 38px; height: 38px;">
+                                    @(review.User?.FullName?.Length > 0 ? review.User.FullName[0].ToString() : "G")
+                                </div>
+                                <div>
+                                    <div class="fw-bold small text-dark">@(review.User?.FullName ?? "Grand Guest")</div>
+                                    <small class="text-muted">Stayed in Suite @(review.Room?.RoomNumber ?? "301")</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="col-12 text-center text-muted py-4">
+                    <p>No guest reviews published yet.</p>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action Section -->
+<section class="py-5 bg-white border-top border-gold-subtle">
+    <div class="container text-center py-4">
+        <h2 class="display-6 fw-bold font-serif mb-3">Begin Your Aurelia Journey</h2>
+        <p class="text-secondary max-w-700 mx-auto mb-4">
+            Reserve directly with us to enjoy complimentary airport limousine transfer, artisan breakfast, and flexible cancellation.
+        </p>
+        <a asp-controller="Rooms" asp-action="Index" class="btn btn-gold btn-lg px-5">
+            Book Your Suite Today
+        </a>
+    </div>
+</section>

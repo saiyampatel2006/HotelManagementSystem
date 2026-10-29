@@ -1,0 +1,23 @@
+@{
+    ViewData["Title"] = "Privilege Restriction";
+}
+
+<div class="container py-5 text-center max-w-700">
+    <div class="p-5 bg-white rounded border border-gold-subtle shadow-sm my-5">
+        <i class="bi bi-shield-x fs-1 text-danger mb-3 d-block"></i>
+        <span class="text-gold text-uppercase fw-bold letter-spacing-2 small">Security Protocol</span>
+        <h2 class="display-6 font-serif fw-bold mt-1 mb-3">Management Clearance Required</h2>
+        <p class="text-secondary mb-4">
+            You have attempted to navigate to an administrative or staff-only operational sector. Your current account lacks the requisite administrative clearance privileges.
+        </p>
+        <div class="d-flex justify-content-center gap-3">
+            <a asp-controller="Home" asp-action="Index" class="btn btn-gold">
+                Return to Grand Lobby
+            </a>
+            <a asp-controller="Account" asp-action="Login" class="btn btn-ivory">
+                Sign In with Admin Account
+            </a>
+        </div>
+    </div>
+</div>
+

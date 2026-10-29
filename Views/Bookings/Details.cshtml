@@ -1,0 +1,158 @@
+@model Booking
+@{
+    ViewData["Title"] = $"Reservation Dossier - {Model.BookingReference}";
+}
+
+<div class="py-4 bg-cream border-bottom border-gold-subtle">
+    <div class="container d-flex flex-wrap justify-content-between align-items-center">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-1 small">
+                    <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li class="breadcrumb-item"><a asp-controller="Bookings" asp-action="MyBookings">My Reservations</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">@Model.BookingReference</li>
+                </ol>
+            </nav>
+            <h1 class="font-serif fw-bold h2 mb-0">Reservation Dossier: @Model.BookingReference</h1>
+        </div>
+        <div class="mt-3 mt-md-0 d-flex gap-2">
+            <button type="button" class="btn btn-ivory" onclick="window.print()">
+                <i class="bi bi-printer me-1"></i> Print Voucher
+            </button>
+            <a asp-controller="Bookings" asp-action="MyBookings" class="btn btn-gold">
+                Back to Bookings
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="container py-5 max-w-700">
+    <div class="p-4 p-md-5 bg-white rounded border border-gold-subtle shadow-sm">
+        <div class="d-flex justify-content-between align-items-center pb-3 mb-4 border-bottom border-gold-subtle">
+            <div>
+                <span class="font-serif fw-bold fs-4 text-dark text-uppercase">The Aurelia Grand</span>
+                <small class="text-secondary d-block">Luxury Hotel & Suites • Official Guest Itinerary</small>
+            </div>
+            <div>
+                @if (Model.Status == BookingStatus.Confirmed)
+                {
+                    <span class="badge badge-booking-confirmed fs-6">CONFIRMED</span>
+                }
+                else if (Model.Status == BookingStatus.CheckedIn)
+                {
+                    <span class="badge badge-booking-checkedin fs-6">CHECKED-IN</span>
+                }
+                else if (Model.Status == BookingStatus.CheckedOut)
+                {
+                    <span class="badge badge-booking-checkedout fs-6">CHECKED-OUT</span>
+                }
+                else
+                {
+                    <span class="badge badge-booking-cancelled fs-6">CANCELLED</span>
+                }
+            </div>
+        </div>
+
+        <div class="row g-4 mb-4">
+            <div class="col-md-6">
+                <small class="text-muted d-block">Guest Information</small>
+                <strong class="text-dark">@(Model.User?.FullName ?? "Grand Guest")</strong>
+                <div class="text-secondary small">Email: @(Model.User?.Email ?? "N/A")</div>
+                <div class="text-secondary small">Phone: @(Model.User?.PhoneNumber ?? "N/A")</div>
+            </div>
+            <div class="col-md-6">
+                <small class="text-muted d-block">Accommodation Details</small>
+                <strong class="text-dark">Suite @Model.Room?.RoomNumber</strong>
+                <div class="text-secondary small">Category: @Model.Room?.RoomType?.Name</div>
+                <div class="text-secondary small">Floor: Floor @Model.Room?.FloorNumber</div>
+            </div>
+            <div class="col-md-6">
+                <small class="text-muted d-block">Scheduled Check-In</small>
+                <strong class="text-dark">@Model.CheckInDate.ToString("dddd, MMMM dd, yyyy")</strong>
+                <small class="text-muted d-block">14:00 PM standard check-in</small>
+            </div>
+            <div class="col-md-6">
+                <small class="text-muted d-block">Scheduled Check-Out</small>
+                <strong class="text-dark">@Model.CheckOutDate.ToString("dddd, MMMM dd, yyyy")</strong>
+                <small class="text-muted d-block">12:00 PM standard check-out</small>
+            </div>
+        </div>
+
+        <!-- Tariff & Tax Calculation Table -->
+        <div class="table-responsive mb-4">
+            <table class="table hotel-table mb-0">
+                <thead>
+                    <tr>
+                        <th>Item Description</th>
+                        <th class="text-center">Rate</th>
+                        <th class="text-center">Nights</th>
+                        <th class="text-end">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <strong>Suite @Model.Room?.RoomNumber Stay</strong>
+                            <small class="d-block text-muted">@Model.Room?.RoomType?.Name</small>
+                        </td>
+                        <td class="text-center">$@Model.Room?.PricePerNight.ToString("N2")</td>
+                        <td class="text-center">@Model.TotalNights</td>
+                        <td class="text-end">$@Model.SubTotal.ToString("N2")</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="text-end fw-semibold">Subtotal:</td>
+                        <td class="text-end">$@Model.SubTotal.ToString("N2")</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="text-end fw-semibold">State Luxury Cess & GST (12%):</td>
+                        <td class="text-end">$@Model.TaxAmount.ToString("N2")</td>
+                    </tr>
+                    <tr class="bg-cream">
+                        <td colspan="3" class="text-end fw-bold font-serif fs-5">Total Reservation Amount:</td>
+                        <td class="text-end fw-bold font-serif fs-5 text-gold-dark">$@Model.TotalPrice.ToString("N2")</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Payment Records -->
+        <div class="mb-4">
+            <h6 class="font-serif fw-bold mb-2">Payment Transactions</h6>
+            @if (Model.Payments.Any())
+            {
+                <div class="d-flex flex-column gap-2">
+                    @foreach (var p in Model.Payments)
+                    {
+                        <div class="p-3 bg-light rounded border d-flex justify-content-between align-items-center small">
+                            <div>
+                                <strong>@p.PaymentMethod</strong> — Txn: <code>@p.TransactionId</code>
+                                <small class="text-muted d-block">Processed on @p.PaymentDate.ToString("MMM dd, yyyy HH:mm") UTC</small>
+                            </div>
+                            <div class="text-end">
+                                <span class="fw-bold text-dark">$@p.Amount.ToString("N2")</span>
+                                <span class="badge @(p.Status == PaymentStatus.Completed ? "bg-success" : (p.Status == PaymentStatus.Refunded ? "bg-info" : "bg-warning")) ms-2">
+                                    @p.Status
+                                </span>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-warning small mb-0">
+                    No payment recorded yet for this booking.
+                </div>
+            }
+        </div>
+
+        @if (Model.Status == BookingStatus.Cancelled)
+        {
+            <div class="alert alert-danger small mb-0">
+                <strong>Reservation Cancelled:</strong> @Model.CancellationReason
+                <small class="d-block text-muted">Processed on @Model.CancelledAt?.ToString("MMM dd, yyyy HH:mm")</small>
+            </div>
+        }
+    </div>
+</div>
+

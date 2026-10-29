@@ -1,0 +1,138 @@
+@model IEnumerable<Booking>
+@{
+    ViewData["Title"] = "My Reservations";
+}
+
+<div class="py-5 bg-cream border-bottom border-gold-subtle">
+    <div class="container">
+        <span class="text-gold text-uppercase fw-bold letter-spacing-2 small">Guest Portal</span>
+        <h1 class="display-5 font-serif fw-bold mt-1">My Reservations</h1>
+        <p class="text-secondary mb-0">View your active itineraries, check-in status, and historical stay receipts.</p>
+    </div>
+</div>
+
+<div class="container py-5">
+    @if (Model.Any())
+    {
+        <div class="d-flex flex-column gap-4">
+            @foreach (var item in Model)
+            {
+                <div class="p-4 bg-white rounded border border-gold-subtle shadow-sm">
+                    <div class="row align-items-center g-4">
+                        <div class="col-lg-3 col-md-4">
+                            <div class="rounded overflow-hidden" style="height: 140px;">
+                                <img src="@item.Room?.ImageUrl" alt="@item.Room?.RoomType?.Name" class="w-100 h-100 object-fit-cover" />
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6 col-md-5">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="font-serif fw-bold fs-5 text-dark">Suite @item.Room?.RoomNumber</span>
+                                <span class="text-muted">• @item.Room?.RoomType?.Name</span>
+                                @if (item.Status == BookingStatus.Confirmed)
+                                {
+                                    <span class="badge badge-booking-confirmed">Confirmed</span>
+                                }
+                                else if (item.Status == BookingStatus.CheckedIn)
+                                {
+                                    <span class="badge badge-booking-checkedin">In House</span>
+                                }
+                                else if (item.Status == BookingStatus.CheckedOut)
+                                {
+                                    <span class="badge badge-booking-checkedout">Completed</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-booking-cancelled">Cancelled</span>
+                                }
+                            </div>
+
+                            <div class="small text-gold-dark fw-bold mb-2">
+                                Ref: @item.BookingReference
+                            </div>
+
+                            <div class="row g-2 small text-secondary">
+                                <div class="col-sm-6">
+                                    <i class="bi bi-calendar-event text-gold me-1"></i>
+                                    <strong>Check-In:</strong> @item.CheckInDate.ToString("MMM dd, yyyy")
+                                </div>
+                                <div class="col-sm-6">
+                                    <i class="bi bi-calendar-check text-gold me-1"></i>
+                                    <strong>Check-Out:</strong> @item.CheckOutDate.ToString("MMM dd, yyyy")
+                                </div>
+                                <div class="col-sm-6">
+                                    <i class="bi bi-moon-stars text-gold me-1"></i>
+                                    <strong>Duration:</strong> @item.TotalNights Night(s)
+                                </div>
+                                <div class="col-sm-6">
+                                    <i class="bi bi-people text-gold me-1"></i>
+                                    <strong>Party:</strong> @item.Adults Adult(s)@(item.Children > 0 ? $", {item.Children} Child" : "")
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3 col-md-3 text-lg-end border-start-lg border-gold-subtle ps-lg-4">
+                            <span class="d-block small text-muted">Total Settled</span>
+                            <span class="font-serif fs-4 fw-bold text-gold-dark d-block mb-3">$@item.TotalPrice.ToString("N2")</span>
+
+                            <div class="d-flex flex-column gap-2">
+                                <a asp-controller="Bookings" asp-action="Details" asp-route-reference="@item.BookingReference" class="btn btn-ivory btn-sm">
+                                    <i class="bi bi-eye me-1"></i> View Voucher
+                                </a>
+
+                                @if (item.Status == BookingStatus.Confirmed && item.CheckInDate.Date >= DateTime.Today)
+                                {
+                                    <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#cancelModal-@item.Id">
+                                        <i class="bi bi-x-circle me-1"></i> Cancel Booking
+                                    </button>
+
+                                    <!-- Cancellation Modal -->
+                                    <div class="modal fade text-start" id="cancelModal-@item.Id" tabindex="-1" aria-labelledby="cancelModalLabel-@item.Id" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content border-gold-subtle">
+                                                <div class="modal-header bg-cream">
+                                                    <h5 class="modal-title font-serif fw-bold" id="cancelModalLabel-@item.Id">Cancel Reservation: @item.BookingReference</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <form asp-controller="Bookings" asp-action="Cancel" method="post">
+                                                    @Html.AntiForgeryToken()
+                                                    <input type="hidden" name="id" value="@item.Id" />
+                                                    <div class="modal-body">
+                                                        <div class="alert alert-warning small mb-3">
+                                                            <i class="bi bi-info-circle me-1"></i>
+                                                            <strong>Cancellation Policy:</strong> Cancellations received at least 48 hours prior to check-in qualify for full 100% refund.
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Reason for Cancellation</label>
+                                                            <textarea name="reason" class="form-control" rows="3" required placeholder="Change of travel plans, personal conflict, etc..."></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-ivory" data-bs-dismiss="modal">Keep Reservation</button>
+                                                        <button type="submit" class="btn btn-danger">Confirm Cancellation</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="p-5 bg-white rounded border border-gold-subtle text-center">
+            <i class="bi bi-journal-x fs-1 text-gold mb-3 d-block"></i>
+            <h4 class="font-serif fw-bold">No Active Reservations Found</h4>
+            <p class="text-secondary small mb-4">You have not reserved any accommodations at The Aurelia Grand yet.</p>
+            <a asp-controller="Rooms" asp-action="Index" class="btn btn-gold">
+                Browse Suites & Book
+            </a>
+        </div>
+    }
+</div>
+

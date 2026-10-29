@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - The Aurelia Grand Hotel & Suites</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom Luxury Theme -->
+    <link rel="stylesheet" href="~/css/luxury-theme.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body class="d-flex flex-column min-vh-100 bg-ivory">
+    <!-- Toast Notifications -->
+    <partial name="_ToastNotification" />
+
+    <!-- Top Luxury Announcement Bar -->
+    <div class="py-1 bg-cream border-bottom border-gold-subtle d-none d-md-block" style="font-size: 0.78rem;">
+        <div class="container d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center gap-3 text-secondary">
+                <span><i class="bi bi-geo-alt text-gold me-1"></i> 700 Luxury Boulevard, Grand Aurelia</span>
+                <span><i class="bi bi-telephone text-gold me-1"></i> +1 (800) 555-AURELIA</span>
+            </div>
+            <div class="d-flex align-items-center gap-3">
+                <span class="badge bg-gold-light text-gold-dark fw-semibold px-2 py-1">
+                    <i class="bi bi-stars me-1"></i> Member Special: 12% Off Advance Reservations
+                </span>
+                <span class="text-secondary">24/7 Concierge</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Navigation Bar -->
+    <header class="sticky-top">
+        <nav class="navbar navbar-expand-lg hotel-navbar">
+            <div class="container">
+                <a class="navbar-brand hotel-brand-logo" asp-controller="Home" asp-action="Index">
+                    <i class="bi bi-gem"></i>
+                    <span>The Aurelia Grand</span>
+                </a>
+                
+                <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#hotelNavContent" aria-controls="hotelNavContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="bi bi-list fs-2 text-gold"></i>
+                </button>
+
+                <div class="collapse navbar-collapse" id="hotelNavContent">
+                    <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link hotel-nav-link" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link hotel-nav-link" asp-controller="Rooms" asp-action="Index">Suites & Villas</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link hotel-nav-link" asp-controller="Home" asp-action="About">About the Hotel</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link hotel-nav-link" asp-controller="Home" asp-action="Contact">Concierge & Contact</a>
+                        </li>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle hotel-nav-link text-gold fw-bold" href="#" id="adminMenuNav" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-shield-lock-fill me-1"></i> Management
+                                </a>
+                                <ul class="dropdown-menu shadow-sm border-gold-subtle" aria-labelledby="adminMenuNav">
+                                    <li><a class="dropdown-item py-2" asp-controller="Admin" asp-action="Index"><i class="bi bi-speedometer2 me-2 text-gold"></i> Executive Dashboard</a></li>
+                                    <li><a class="dropdown-item py-2" asp-controller="Admin" asp-action="Rooms"><i class="bi bi-door-open me-2 text-gold"></i> Room Inventory & CRUD</a></li>
+                                    <li><a class="dropdown-item py-2" asp-controller="Admin" asp-action="Bookings"><i class="bi bi-calendar-check me-2 text-gold"></i> Bookings & Check-In Desk</a></li>
+                                    <li><a class="dropdown-item py-2" asp-controller="Admin" asp-action="Customers"><i class="bi bi-people me-2 text-gold"></i> Guest Directory</a></li>
+                                    <li><a class="dropdown-item py-2" asp-controller="Reports" asp-action="Index"><i class="bi bi-graph-up-arrow me-2 text-gold"></i> Financial & Occupancy Reports</a></li>
+                                </ul>
+                            </li>
+                        }
+                    </ul>
+
+                    <partial name="_LoginPartial" />
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <main role="main" class="flex-grow-1">
+        @RenderBody()
+    </main>
+
+    <!-- Luxury Footer -->
+    <footer class="hotel-footer">
+        <div class="container">
+            <div class="row g-4 mb-5">
+                <div class="col-lg-4 col-md-6">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <i class="bi bi-gem text-gold fs-3"></i>
+                        <span class="font-serif fw-bold fs-4 text-dark text-uppercase letter-spacing-1">The Aurelia Grand</span>
+                    </div>
+                    <p class="text-secondary small pe-lg-4">
+                        A bespoke sanctuary of timeless European architecture, Michelin-inspired culinary artistry, and intuitive 24/7 royal hospitality designed for the world's most discerning guests.
+                    </p>
+                    <div class="d-flex gap-2 text-gold">
+                        <span class="badge bg-gold-light text-gold-dark border border-gold-subtle">Forbes 5-Star Hotel</span>
+                        <span class="badge bg-gold-light text-gold-dark border border-gold-subtle">Condé Nast Gold List</span>
+                    </div>
+                </div>
+
+                <div class="col-lg-2 col-md-6">
+                    <h5>Discover</h5>
+                    <ul class="list-unstyled">
+                        <li><a class="footer-link" asp-controller="Rooms" asp-action="Index">Suites & Penthouses</a></li>
+                        <li><a class="footer-link" asp-controller="Home" asp-action="About">Private Dining & Bar</a></li>
+                        <li><a class="footer-link" asp-controller="Home" asp-action="About">Aurelia Thalasso Spa</a></li>
+                        <li><a class="footer-link" asp-controller="Home" asp-action="Contact">Event & Gala Halls</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <h5>Concierge Desk</h5>
+                    <ul class="list-unstyled text-secondary small">
+                        <li class="mb-2"><i class="bi bi-geo-alt text-gold me-2"></i> 700 Luxury Boulevard, Suite A</li>
+                        <li class="mb-2"><i class="bi bi-telephone text-gold me-2"></i> +1 (800) 555-AURELIA</li>
+                        <li class="mb-2"><i class="bi bi-envelope text-gold me-2"></i> concierge@grandaurelia.com</li>
+                        <li class="mb-2"><i class="bi bi-clock text-gold me-2"></i> Check-in: 14:00 | Check-out: 12:00</li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <h5>College Project Info</h5>
+                    <div class="p-3 bg-cream rounded border border-gold-subtle small">
+                        <div class="fw-bold text-gold-dark mb-1">B.Tech CSE (AIML)</div>
+                        <div class="text-secondary mb-1">Subject: Advanced Web Architecture</div>
+                        <div class="text-secondary mb-2">Tech: ASP.NET Core 8 MVC, EF Core, SQL Server</div>
+                        <span class="badge bg-success-subtle text-success border border-success-subtle">Active & Verified</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-4 border-top border-gold-subtle d-flex flex-column flex-md-row justify-content-between align-items-center text-secondary small">
+                <p class="mb-2 mb-md-0">&copy; @DateTime.UtcNow.Year The Aurelia Grand Hotel & Suites. All rights reserved.</p>
+                <div class="d-flex gap-3">
+                    <a asp-controller="Home" asp-action="Privacy" class="text-secondary">Privacy Charter</a>
+                    <span>•</span>
+                    <a asp-controller="Home" asp-action="About" class="text-secondary">Terms of Luxury Service</a>
+                    <span>•</span>
+                    <a asp-controller="Home" asp-action="Contact" class="text-secondary">Support</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 Bundle JS -->
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Chart.js for Admin Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom Hotel JS -->
+    <script src="~/js/hotel-scripts.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

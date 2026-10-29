@@ -1,0 +1,37 @@
+@if (TempData["SuccessMessage"] != null || TempData["ErrorMessage"] != null)
+{
+    <div class="hotel-toast-container p-3">
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="toast toast-gold show align-items-center mb-2" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body d-flex align-items-center gap-2">
+                        <i class="bi bi-check-circle-fill text-gold fs-5"></i>
+                        <div>
+                            <strong class="d-block text-dark">Success</strong>
+                            <span class="text-secondary small">@TempData["SuccessMessage"]</span>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
+        }
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="toast show align-items-center border-danger border-start border-4 mb-2 shadow-sm" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body d-flex align-items-center gap-2">
+                        <i class="bi bi-exclamation-triangle-fill text-danger fs-5"></i>
+                        <div>
+                            <strong class="d-block text-dark">Notice</strong>
+                            <span class="text-secondary small">@TempData["ErrorMessage"]</span>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
+        }
+    </div>
+}
+

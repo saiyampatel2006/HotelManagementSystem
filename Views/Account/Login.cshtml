@@ -1,0 +1,70 @@
+@model LoginViewModel
+@{
+    ViewData["Title"] = "Member Sign In";
+}
+
+<div class="py-5 bg-cream border-bottom border-gold-subtle text-center">
+    <div class="container py-3">
+        <span class="text-gold text-uppercase fw-bold letter-spacing-2 small">Guest & Staff Portal</span>
+        <h1 class="display-5 font-serif fw-bold mt-1">Sign In to The Grand Aurelia</h1>
+        <div class="gold-divider"><i class="bi bi-gem"></i></div>
+    </div>
+</div>
+
+<div class="container py-5 max-w-700">
+    <!-- Quick Credential Auto-Fill Helper for College Evaluators -->
+    <div class="p-3 bg-white rounded border border-warning shadow-sm mb-4">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-2">
+            <span class="badge bg-gold-dark text-white fw-semibold">
+                <i class="bi bi-stars me-1"></i> College Evaluator Quick Sign-In
+            </span>
+            <small class="text-secondary">Click either button below to auto-fill credentials:</small>
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+            <button type="button" class="btn btn-outline-dark btn-sm flex-grow-1" onclick="fillCredentials('admin@grandaurelia.com', 'Admin@123')">
+                <i class="bi bi-shield-lock-fill text-gold me-1"></i> Auto-Fill <strong>Admin</strong> (admin@grandaurelia.com)
+            </button>
+            <button type="button" class="btn btn-outline-dark btn-sm flex-grow-1" onclick="fillCredentials('customer@gmail.com', 'Customer@123')">
+                <i class="bi bi-person-fill text-gold me-1"></i> Auto-Fill <strong>Customer</strong> (customer@gmail.com)
+            </button>
+        </div>
+    </div>
+
+    <div class="p-4 p-md-5 bg-white rounded border border-gold-subtle shadow-sm">
+        <form asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" class="form-control" id="loginEmail" placeholder="your.email@domain.com" required />
+                <span asp-validation-for="Email" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Password" class="form-label"></label>
+                <input asp-for="Password" class="form-control" id="loginPassword" type="password" placeholder="••••••••" required />
+                <span asp-validation-for="Password" class="text-danger small"></span>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="form-check">
+                    <input asp-for="RememberMe" class="form-check-input" />
+                    <label asp-for="RememberMe" class="form-check-label small text-secondary"></label>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-gold w-100 py-2 fs-6 mb-3">
+                <i class="bi bi-box-arrow-in-right me-1"></i> Sign In to Account
+            </button>
+
+            <div class="text-center pt-3 border-top border-gold-subtle small text-secondary">
+                Don't have a membership account yet?
+                <a asp-controller="Account" asp-action="Register" asp-route-returnUrl="@Model.ReturnUrl" class="text-gold fw-bold ms-1">
+                    Join Membership
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+

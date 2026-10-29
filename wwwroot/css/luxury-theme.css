@@ -1,0 +1,585 @@
+/* ==========================================================================
+   THE AURELIA GRAND HOTEL & SUITES - LUXURY THEME
+   Palette: Light Ivory, Crisp White, Warm Beige & Royal Gold Accents.
+   No dark theme.
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --hotel-ivory-bg: #FCFBF7;
+    --hotel-cream-bg: #F8F5EE;
+    --hotel-beige-subtle: #EFE9DF;
+    --hotel-beige-border: #E5DCCE;
+    --hotel-gold-primary: #B89354;
+    --hotel-gold-hover: #9F7B3D;
+    --hotel-gold-dark: #82632B;
+    --hotel-gold-light: #F4ECE0;
+    --hotel-gold-gradient: linear-gradient(135deg, #C5A065 0%, #B89354 50%, #9C793A 100%);
+    --hotel-gold-soft-gradient: linear-gradient(135deg, #FBF8F2 0%, #F5EFE4 100%);
+    --hotel-text-main: #2C2723;
+    --hotel-text-muted: #736C64;
+    --hotel-white: #FFFFFF;
+    --hotel-shadow-sm: 0 4px 16px rgba(184, 147, 84, 0.08);
+    --hotel-shadow-md: 0 10px 30px rgba(44, 39, 35, 0.07);
+    --hotel-shadow-lg: 0 20px 45px rgba(184, 147, 84, 0.12);
+    --font-heading: 'Playfair Display', Georgia, serif;
+    --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Global resets & typography */
+body {
+    background-color: var(--hotel-ivory-bg);
+    color: var(--hotel-text-main);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, .font-serif, .navbar-brand {
+    font-family: var(--font-heading);
+    color: var(--hotel-text-main);
+    letter-spacing: -0.01em;
+}
+
+.font-sans {
+    font-family: var(--font-body);
+}
+
+a {
+    color: var(--hotel-gold-primary);
+    text-decoration: none;
+    transition: all 0.25s ease-in-out;
+}
+
+a:hover {
+    color: var(--hotel-gold-hover);
+}
+
+/* Luxury Gold & Beige Accents */
+.text-gold {
+    color: var(--hotel-gold-primary) !important;
+}
+
+.text-gold-dark {
+    color: var(--hotel-gold-dark) !important;
+}
+
+.bg-ivory {
+    background-color: var(--hotel-ivory-bg) !important;
+}
+
+.bg-cream {
+    background-color: var(--hotel-cream-bg) !important;
+}
+
+.bg-gold-light {
+    background-color: var(--hotel-gold-light) !important;
+}
+
+.border-gold-subtle {
+    border-color: var(--hotel-beige-border) !important;
+}
+
+/* Header & Navigation Bar */
+.hotel-navbar {
+    background-color: rgba(255, 255, 255, 0.96) !important;
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--hotel-beige-border);
+    padding: 0.85rem 0;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.03);
+}
+
+.hotel-brand-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.55rem;
+    font-weight: 700;
+    color: var(--hotel-text-main) !important;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.hotel-brand-logo i {
+    color: var(--hotel-gold-primary);
+    font-size: 1.65rem;
+}
+
+.hotel-nav-link {
+    font-family: var(--font-body);
+    font-size: 0.88rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--hotel-text-main) !important;
+    padding: 0.5rem 1rem !important;
+    position: relative;
+    transition: color 0.25s ease;
+}
+
+.hotel-nav-link:hover,
+.hotel-nav-link.active {
+    color: var(--hotel-gold-primary) !important;
+}
+
+.hotel-nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px;
+    background-color: var(--hotel-gold-primary);
+    transition: width 0.3s ease;
+}
+
+.hotel-nav-link:hover::after,
+.hotel-nav-link.active::after {
+    width: 60%;
+}
+
+/* Luxury Buttons */
+.btn-gold {
+    background: var(--hotel-gold-gradient);
+    color: #FFFFFF !important;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.88rem;
+    letter-spacing: 0.04em;
+    padding: 0.65rem 1.6rem;
+    border: none;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(184, 147, 84, 0.25);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.btn-gold:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(184, 147, 84, 0.35);
+    background: linear-gradient(135deg, #BE9759 0%, #A68041 100%);
+    color: #FFFFFF !important;
+}
+
+.btn-gold-outline {
+    background: transparent;
+    color: var(--hotel-gold-primary) !important;
+    border: 1.5px solid var(--hotel-gold-primary);
+    font-weight: 600;
+    font-size: 0.88rem;
+    letter-spacing: 0.04em;
+    padding: 0.6rem 1.5rem;
+    border-radius: 4px;
+    transition: all 0.25s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.btn-gold-outline:hover {
+    background: var(--hotel-gold-primary);
+    color: #FFFFFF !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(184, 147, 84, 0.2);
+}
+
+.btn-ivory {
+    background: #FFFFFF;
+    color: var(--hotel-text-main) !important;
+    border: 1px solid var(--hotel-beige-border);
+    font-weight: 600;
+    font-size: 0.88rem;
+    padding: 0.65rem 1.4rem;
+    border-radius: 4px;
+    transition: all 0.25s ease;
+}
+
+.btn-ivory:hover {
+    background: var(--hotel-cream-bg);
+    border-color: var(--hotel-gold-primary);
+    color: var(--hotel-gold-hover) !important;
+}
+
+/* Luxury Cards */
+.hotel-card {
+    background: #FFFFFF;
+    border: 1px solid var(--hotel-beige-border);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: var(--hotel-shadow-sm);
+    transition: all 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.hotel-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--hotel-shadow-lg);
+    border-color: #D6C7B2;
+}
+
+.hotel-card-img-wrapper {
+    position: relative;
+    overflow: hidden;
+    height: 250px;
+}
+
+.hotel-card-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+}
+
+.hotel-card:hover .hotel-card-img-wrapper img {
+    transform: scale(1.05);
+}
+
+.hotel-badge-ribbon {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: var(--hotel-gold-gradient);
+    color: #FFFFFF;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.35rem 0.75rem;
+    border-radius: 3px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.hotel-badge-price {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(6px);
+    color: var(--hotel-text-main);
+    padding: 0.45rem 0.85rem;
+    border-radius: 4px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    border: 1px solid rgba(184, 147, 84, 0.25);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Facility Chips / Pills */
+.facility-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.8rem;
+    color: var(--hotel-text-muted);
+    background: var(--hotel-cream-bg);
+    border: 1px solid var(--hotel-beige-border);
+    padding: 0.3rem 0.65rem;
+    border-radius: 4px;
+    margin-right: 0.35rem;
+    margin-bottom: 0.4rem;
+}
+
+.facility-pill i {
+    color: var(--hotel-gold-primary);
+}
+
+/* Search Box Overlay */
+.hotel-hero-search {
+    background: #FFFFFF;
+    border: 1px solid var(--hotel-beige-border);
+    border-radius: 8px;
+    padding: 1.75rem;
+    box-shadow: 0 15px 40px rgba(44, 39, 35, 0.12);
+    position: relative;
+    z-index: 20;
+    margin-top: -65px;
+}
+
+/* Form Controls Customization */
+.form-label {
+    font-weight: 600;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--hotel-text-main);
+    margin-bottom: 0.4rem;
+}
+
+.form-control, .form-select {
+    background-color: #FFFFFF;
+    border: 1px solid var(--hotel-beige-border);
+    border-radius: 4px;
+    padding: 0.65rem 0.95rem;
+    font-size: 0.92rem;
+    color: var(--hotel-text-main);
+    transition: all 0.2s ease;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--hotel-gold-primary);
+    box-shadow: 0 0 0 3px rgba(184, 147, 84, 0.18);
+    background-color: #FFFFFF;
+    color: var(--hotel-text-main);
+}
+
+/* Hero Section */
+.hero-luxury {
+    position: relative;
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(rgba(20, 16, 12, 0.38), rgba(20, 16, 12, 0.42)), 
+                url('https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+    color: #FFFFFF;
+    padding: 6rem 0;
+}
+
+.hero-luxury h1 {
+    color: #FFFFFF;
+    font-size: 3.5rem;
+    font-weight: 700;
+    line-height: 1.15;
+    text-shadow: 0 3px 12px rgba(0, 0, 0, 0.4);
+}
+
+.hero-luxury .hero-subtitle {
+    font-family: var(--font-body);
+    font-size: 1.25rem;
+    color: #F8F5EE;
+    font-weight: 300;
+    letter-spacing: 0.05em;
+    margin-bottom: 2rem;
+}
+
+/* Luxury Divider */
+.gold-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin: 1.5rem 0;
+}
+
+.gold-divider::before,
+.gold-divider::after {
+    content: '';
+    height: 1px;
+    width: 60px;
+    background-color: var(--hotel-gold-primary);
+}
+
+.gold-divider i {
+    color: var(--hotel-gold-primary);
+    font-size: 0.9rem;
+}
+
+/* Admin Dashboard KPI Cards */
+.kpi-card {
+    background: #FFFFFF;
+    border: 1px solid var(--hotel-beige-border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: var(--hotel-shadow-sm);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.25s ease;
+}
+
+.kpi-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--hotel-shadow-md);
+}
+
+.kpi-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--hotel-gold-gradient);
+}
+
+.kpi-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 8px;
+    background: var(--hotel-gold-light);
+    color: var(--hotel-gold-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.kpi-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--hotel-text-muted);
+}
+
+.kpi-value {
+    font-size: 1.85rem;
+    font-weight: 700;
+    color: var(--hotel-text-main);
+    font-family: var(--font-heading);
+}
+
+/* Status Badges */
+.badge-status {
+    padding: 0.35rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.badge-status-available {
+    background-color: #E8F5E9;
+    color: #2E7D32;
+    border: 1px solid #C8E6C9;
+}
+
+.badge-status-booked {
+    background-color: #FFF3E0;
+    color: #E65100;
+    border: 1px solid #FFE0B2;
+}
+
+.badge-status-maintenance {
+    background-color: #FFEBEE;
+    color: #C62828;
+    border: 1px solid #FFCDD2;
+}
+
+.badge-status-cleaning {
+    background-color: #E0F2F1;
+    color: #00695C;
+    border: 1px solid #B2DFDB;
+}
+
+.badge-booking-confirmed {
+    background-color: #E8F5E9;
+    color: #2E7D32;
+    border: 1px solid #C8E6C9;
+}
+
+.badge-booking-checkedin {
+    background-color: #E3F2FD;
+    color: #1565C0;
+    border: 1px solid #BBDEFB;
+}
+
+.badge-booking-checkedout {
+    background-color: #F5F5F5;
+    color: #616161;
+    border: 1px solid #E0E0E0;
+}
+
+.badge-booking-cancelled {
+    background-color: #FFEBEE;
+    color: #C62828;
+    border: 1px solid #FFCDD2;
+}
+
+/* AIML Showcase Banner */
+.aiml-badge-box {
+    background: linear-gradient(135deg, #FAF6EE 0%, #F5EDE0 100%);
+    border: 1px solid #DDCDB8;
+    border-left: 4px solid var(--hotel-gold-primary);
+    border-radius: 6px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Tables */
+.hotel-table {
+    background: #FFFFFF;
+    border: 1px solid var(--hotel-beige-border);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.hotel-table thead th {
+    background-color: var(--hotel-cream-bg);
+    color: var(--hotel-text-main);
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--hotel-beige-border);
+    padding: 0.9rem 1.1rem;
+}
+
+.hotel-table tbody td {
+    padding: 0.95rem 1.1rem;
+    border-bottom: 1px solid var(--hotel-beige-border);
+    vertical-align: middle;
+}
+
+.hotel-table tbody tr:hover {
+    background-color: #FCFAF6;
+}
+
+/* Luxury Footer */
+.hotel-footer {
+    background-color: #FFFFFF;
+    border-top: 1px solid var(--hotel-beige-border);
+    color: var(--hotel-text-main);
+    padding: 4.5rem 0 2rem 0;
+    margin-top: 5rem;
+}
+
+.hotel-footer h5 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+    color: var(--hotel-text-main);
+}
+
+.footer-link {
+    color: var(--hotel-text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 0.6rem;
+    display: block;
+}
+
+.footer-link:hover {
+    color: var(--hotel-gold-primary);
+    padding-left: 4px;
+}
+
+/* Custom Toast Container */
+.hotel-toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+}
+
+.toast-gold {
+    background: #FFFFFF;
+    border-left: 4px solid var(--hotel-gold-primary);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+}
+
+/* Responsive adjustments */
+@media (max-width: 991.98px) {
+    .hero-luxury h1 {
+        font-size: 2.5rem;
+    }
+    .hotel-hero-search {
+        margin-top: 1.5rem;
+    }
+}
+

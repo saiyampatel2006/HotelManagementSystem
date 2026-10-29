@@ -1,0 +1,89 @@
+@using Microsoft.AspNetCore.Identity
+@using HotelManagementSystem.Models.Entities
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<ul class="navbar-nav align-items-lg-center gap-2">
+@if (SignInManager.IsSignedIn(User))
+{
+    var currentUser = await UserManager.GetUserAsync(User);
+    var displayName = currentUser?.FullName ?? User.Identity?.Name ?? "Guest";
+
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle hotel-nav-link d-flex align-items-center gap-2" href="#" id="userMenuDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="d-inline-flex align-items-center justify-content-center bg-gold-light text-gold-dark rounded-circle" style="width: 32px; height: 32px; font-weight: 700; font-size: 0.82rem;">
+                @(displayName.Length > 0 ? displayName[0].ToString().ToUpper() : "G")
+            </span>
+            <span>@displayName</span>
+            @if (User.IsInRole("Admin"))
+            {
+                <span class="badge bg-warning text-dark ms-1" style="font-size: 0.65rem;">ADMIN</span>
+            }
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end shadow-sm border-gold-subtle" aria-labelledby="userMenuDropdown">
+            <li>
+                <div class="px-3 py-2 border-bottom">
+                    <small class="text-muted d-block">Signed in as</small>
+                    <span class="fw-bold small text-dark">@User.Identity?.Name</span>
+                </div>
+            </li>
+            @if (User.IsInRole("Admin"))
+            {
+                <li>
+                    <a class="dropdown-item py-2 d-flex align-items-center gap-2 text-gold-dark fw-semibold" asp-controller="Admin" asp-action="Index">
+                        <i class="bi bi-speedometer2"></i> Admin Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item py-2 d-flex align-items-center gap-2" asp-controller="Admin" asp-action="Rooms">
+                        <i class="bi bi-door-open"></i> Manage Rooms
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item py-2 d-flex align-items-center gap-2" asp-controller="Admin" asp-action="Bookings">
+                        <i class="bi bi-calendar-check"></i> Manage Bookings
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item py-2 d-flex align-items-center gap-2" asp-controller="Reports" asp-action="Index">
+                        <i class="bi bi-bar-chart-line"></i> Revenue & Reports
+                    </a>
+                </li>
+                <li><hr class="dropdown-divider"></li>
+            }
+            <li>
+                <a class="dropdown-item py-2 d-flex align-items-center gap-2" asp-controller="Bookings" asp-action="MyBookings">
+                    <i class="bi bi-journal-bookmark"></i> My Reservations
+                </a>
+            </li>
+            <li>
+                <a class="dropdown-item py-2 d-flex align-items-center gap-2" asp-controller="Account" asp-action="Profile">
+                    <i class="bi bi-person-gear"></i> Member Profile
+                </a>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+                <form class="form-inline" asp-controller="Account" asp-action="Logout" method="post">
+                    <button type="submit" class="dropdown-item py-2 text-danger d-flex align-items-center gap-2">
+                        <i class="bi bi-box-arrow-right"></i> Sign Out
+                    </button>
+                </form>
+            </li>
+        </ul>
+    </li>
+}
+else
+{
+    <li class="nav-item">
+        <a class="nav-link hotel-nav-link" asp-controller="Account" asp-action="Login">
+            <i class="bi bi-person me-1"></i> Sign In
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="btn btn-gold btn-sm px-3" asp-controller="Account" asp-action="Register">
+            Join Membership
+        </a>
+    </li>
+}
+</ul>
+

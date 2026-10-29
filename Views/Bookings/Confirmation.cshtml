@@ -1,0 +1,117 @@
+@model Booking
+@{
+    ViewData["Title"] = $"Reservation Confirmed - {Model.BookingReference}";
+}
+
+<div class="py-5 bg-cream border-bottom border-gold-subtle text-center">
+    <div class="container py-3">
+        <div class="d-inline-flex align-items-center justify-content-center bg-success text-white rounded-circle p-3 mb-3 shadow-sm">
+            <i class="bi bi-check-lg fs-1"></i>
+        </div>
+        <span class="text-gold text-uppercase fw-bold letter-spacing-2 small d-block">Reservation Guaranteed</span>
+        <h1 class="display-4 font-serif fw-bold mt-1">We Look Forward to Welcoming You</h1>
+        <div class="gold-divider"><i class="bi bi-gem"></i></div>
+        <p class="text-secondary max-w-700 mx-auto">
+            Your luxury accommodation at The Aurelia Grand has been secured. A confirmation dossier has been delivered to your registered email.
+        </p>
+    </div>
+</div>
+
+<div class="container py-5 max-w-700">
+    <!-- Printable Luxury Voucher Card -->
+    <div class="p-4 p-md-5 bg-white rounded border border-gold-subtle shadow-md mb-4" id="printableVoucher">
+        <div class="d-flex justify-content-between align-items-center border-bottom border-gold-subtle pb-3 mb-4">
+            <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-gem text-gold fs-3"></i>
+                <span class="font-serif fw-bold fs-5 text-uppercase">The Aurelia Grand</span>
+            </div>
+            <div class="text-end">
+                <span class="badge badge-booking-confirmed">CONFIRMED</span>
+            </div>
+        </div>
+
+        <div class="bg-cream p-3 rounded border border-gold-subtle text-center mb-4">
+            <small class="text-muted text-uppercase letter-spacing-1 d-block mb-1">Booking Confirmation Reference</small>
+            <span class="font-serif fs-2 fw-bold text-gold-dark letter-spacing-2">@Model.BookingReference</span>
+        </div>
+
+        <div class="row g-4 mb-4">
+            <div class="col-6">
+                <small class="text-secondary d-block">Guest Name</small>
+                <strong class="text-dark">@(Model.User?.FullName ?? "Grand Guest")</strong>
+            </div>
+            <div class="col-6">
+                <small class="text-secondary d-block">Contact Email</small>
+                <span class="text-dark">@(Model.User?.Email ?? "N/A")</span>
+            </div>
+            <div class="col-6">
+                <small class="text-secondary d-block">Suite Reserved</small>
+                <strong class="text-dark">Suite @Model.Room?.RoomNumber — @Model.Room?.RoomType?.Name</strong>
+            </div>
+            <div class="col-6">
+                <small class="text-secondary d-block">Party Size</small>
+                <span class="text-dark">@Model.Adults Adult(s)@(Model.Children > 0 ? $", {Model.Children} Child(ren)" : "")</span>
+            </div>
+            <div class="col-6">
+                <small class="text-secondary d-block">Check-In</small>
+                <strong class="text-dark">@Model.CheckInDate.ToString("dddd, MMMM dd, yyyy")</strong>
+                <small class="text-muted d-block">(From 14:00 PM)</small>
+            </div>
+            <div class="col-6">
+                <small class="text-secondary d-block">Check-Out</small>
+                <strong class="text-dark">@Model.CheckOutDate.ToString("dddd, MMMM dd, yyyy")</strong>
+                <small class="text-muted d-block">(Until 12:00 PM)</small>
+            </div>
+        </div>
+
+        <!-- Financial Summary -->
+        <div class="p-3 bg-light rounded border mb-4 small">
+            <div class="d-flex justify-content-between mb-1">
+                <span>Total Stay Duration:</span>
+                <strong>@Model.TotalNights Night(s)</strong>
+            </div>
+            <div class="d-flex justify-content-between mb-1">
+                <span>Room Charges:</span>
+                <span>$@Model.SubTotal.ToString("N2")</span>
+            </div>
+            <div class="d-flex justify-content-between mb-1">
+                <span>Luxury Taxes & Service Cess (12%):</span>
+                <span>$@Model.TaxAmount.ToString("N2")</span>
+            </div>
+            <div class="d-flex justify-content-between pt-2 border-top fw-bold fs-6 text-dark">
+                <span>Total Settled:</span>
+                <span class="text-gold-dark">$@Model.TotalPrice.ToString("N2")</span>
+            </div>
+        </div>
+
+        @if (Model.Payments.Any())
+        {
+            var p = Model.Payments.First();
+            <div class="alert alert-secondary small d-flex justify-content-between align-items-center mb-0">
+                <div>
+                    <strong>Payment Recorded:</strong> @p.PaymentMethod — @p.TransactionId
+                </div>
+                <span class="badge bg-success">@p.Status</span>
+            </div>
+        }
+
+        @if (!string.IsNullOrEmpty(Model.SpecialRequests))
+        {
+            <div class="mt-3 p-3 bg-cream rounded border border-gold-subtle small">
+                <strong>Special Requests Noted:</strong>
+                <p class="mb-0 text-secondary">@Model.SpecialRequests</p>
+            </div>
+        }
+    </div>
+
+    <!-- Actions -->
+    <div class="d-flex flex-wrap gap-3 justify-content-center">
+        <button type="button" class="btn btn-ivory" onclick="window.print()">
+            <i class="bi bi-printer me-1"></i> Print Confirmation Voucher
+        </button>
+        <a asp-controller="Bookings" asp-action="MyBookings" class="btn btn-gold">
+            <i class="bi bi-journal-bookmark me-1"></i> View My Reservations
+        </a>
+    </div>
+</div>
+
