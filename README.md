@@ -222,3 +222,5 @@ HotelManagementSystem/
 This project was engineered for academic demonstration purposes in accordance with third-year B.Tech CSE (AIML) university guidelines.
 All photographic assets are sourced via Unsplash under royalty-free editorial licenses.
 
+#   H O T E L - - M A N A G E M E N T - S Y S T E M  
+ 
